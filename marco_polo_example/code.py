@@ -1,3 +1,5 @@
+import time
+
 import board
 import digitalio
 import p9813
@@ -11,7 +13,10 @@ def handle_message(client, topic, m):
     print("New message on topic {0}: {1}".format(topic, m))
 
     # If we are still off and receive marco reply with polo
-    if led_state == "off" and m == "marco":
+    if led_state == "off" or led_state == "waiting" and m == "marco":
+        # This sleep is here to show you that messages get received.
+        # remove it to make it run at full speed.
+        time.sleep(1)
         mqtt_client.publish(group_number, "polo")
         led_state = "found"
         led_cycle = 0
